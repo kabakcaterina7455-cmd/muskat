@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Мой профиль{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2>Личный кабинет</h2>
+    <h4>Мои бронирования</h4>
+    {% if bookings %}
+    <table class="table table-striped">
+        <thead>
+            <tr><th>Номер</th><th>Заезд</th><th>Выезд</th><th>Статус</th><th>Сумма</th></tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.room.name }}</td>
+                <td>{{ booking.check_in }}</td>
+                <td>{{ booking.check_out }}</td>
+                <td>{{ booking.get_status_display }}</td>
+                <td>{{ booking.total_price }} ₽</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>У вас пока нет бронирований.</p>
+    {% endif %}
+</div>
+{% endblock %}

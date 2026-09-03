@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Гостевой дом "Мускат"{% endblock %}</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FullCalendar -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <!-- Кастомные стили -->
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'core:home' %}">
+                <i class="fas fa-home"></i> Мускат
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'rooms:list' %}">Номера</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'pages:page' 'gallery' %}">Галерея</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'pages:page' 'services' %}">Услуги</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'pages:page' 'for-kids' %}">Для детей</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'pages:page' 'faq' %}">FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'pages:contacts' %}">Контакты</a></li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> {{ user.email }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Профиль</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Выйти</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Вход</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:register' %}">Регистрация</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Сообщения -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Основное содержимое -->
+    {% block content %}{% endblock %}
+
+    <!-- Футер -->
+    <footer class="footer py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Гостевой дом "Мускат"</h5>
+                    <p><i class="fas fa-map-marker-alt"></i> ул. Морская, 15, п. Береговой</p>
+                    <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+                    <p><i class="fas fa-envelope"></i> info@muscat.ru</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Быстрые ссылки</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'rooms:list' %}">Номера</a></li>
+                        <li><a href="{% url 'pages:page' 'services' %}">Услуги</a></li>
+                        <li><a href="{% url 'pages:page' 'faq' %}">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Мы в соцсетях</h5>
+                    <a href="#" class="text-light me-2"><i class="fab fa-instagram fa-2x"></i></a>
+                    <a href="#" class="text-light me-2"><i class="fab fa-vk fa-2x"></i></a>
+                    <a href="#" class="text-light"><i class="fab fa-telegram fa-2x"></i></a>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <p class="text-center mb-0">&copy; 2026 Мускат. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <!-- Кастомный JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

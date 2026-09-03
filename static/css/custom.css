@@ -1,0 +1,100 @@
+:root {
+    --cream: #FBF7F0;
+    --sand: #F0EBE3;
+    --green: #2E5D3A;
+    --blue: #1A3B5C;
+    --terracotta: #D4884A;
+    --dark: #2C2C2C;
+    --gray: #5A5A5A;
+}
+
+body {
+    background-color: var(--cream);
+    color: var(--dark);
+    font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Playfair Display', serif;
+}
+
+.navbar {
+    background-color: var(--green) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.navbar-brand, .nav-link {
+    color: var(--cream) !important;
+}
+.nav-link:hover {
+    color: #f0e6d0 !important;
+}
+
+.btn-primary {
+    background-color: var(--blue);
+    border-color: var(--blue);
+}
+.btn-primary:hover {
+    background-color: #14304C;
+    border-color: #14304C;
+}
+
+.btn-warning {
+    background-color: var(--terracotta);
+    border-color: var(--terracotta);
+    color: white;
+}
+.btn-warning:hover {
+    background-color: #b8733e;
+    border-color: #b8733e;
+    color: white;
+}
+
+.card {
+    background-color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.footer {
+    background-color: var(--green);
+    color: var(--cream);
+}
+.footer a {
+    color: var(--sand);
+    text-decoration: none;
+}
+.footer a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.hero {
+    padding: 80px 0;
+    color: white;
+}
+
+#calendar .fc-daygrid-day {
+    background-color: white;
+}
+#calendar .fc-day-today {
+    background-color: var(--sand) !important;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 40px 0;
+    }
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+}
+
+.hero {
+    background: url('/static/images/hero-bg.jpg') center/cover no-repeat;
+    /* Можно также добавить цвет фона на случай, если картинка не загрузится */
+    background-color: #2E5D3A;
+}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ room.name }} – Мускат{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Карусель фото -->
+            <div id="roomCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in room.images.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ room.name }}">
+                    </div>
+                    {% empty %}
+                    <div class="carousel-item active">
+                        <img src="{% static 'images/no-image.jpg' %}" class="d-block w-100" alt="Нет фото">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+            <!-- Описание -->
+            <div class="mt-4">
+                <h2>{{ room.name }}</h2>
+                <p>{{ room.description }}</p>
+                <h4>Удобства</h4>
+                <ul>
+                    {% for amenity in room.amenities.all %}
+                    <li><i class="fas {{ amenity.icon }}"></i> {{ amenity.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <!-- Информация и бронирование -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Цена от {{ room.price_per_night }} ₽/сутки</h5>
+                    <p><i class="fas fa-users"></i> Взрослых: {{ room.max_adults }}, детей: {{ room.max_children }}</p>
+                    <p><i class="fas fa-bed"></i> {{ room.bed_type }}</p>
+                    <p><i class="fas fa-arrows-alt"></i> {{ room.square }} м²</p>
+                </div>
+            </div>
+            <!-- Календарь -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Календарь доступности</h5>
+                    <div id="calendar" data-events='{{ booked_events|safe }}'></div>
+                </div>
+            </div>
+            <!-- Форма бронирования -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Забронировать</h5>
+                    <form action="{% url 'bookings:create' room.slug %}" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-warning w-100">Забронировать</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    if (calendarEl) {
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            firstDay: 1,
+            events: JSON.parse(calendarEl.dataset.events || '[]'),
+            selectable: false,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth'
+            }
+        });
+        calendar.render();
+    }
+});
+</script>
+{% endblock %}

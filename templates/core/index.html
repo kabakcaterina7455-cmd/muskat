@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Гостевой дом "Мускат" – уютный отдых у моря{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container text-center text-white py-5">
+        <h1 class="display-2 fw-bold">Добро пожаловать в "Мускат"</h1>
+        <p class="lead">Уютные номера в 150 метрах от моря с закрытой территорией и детским бассейном</p>
+        <a href="{% url 'rooms:list' %}" class="btn btn-warning btn-lg mt-3">Забронировать сейчас</a>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row text-center">
+        <div class="col-md-3"><i class="fas fa-swimmer fa-3x text-primary mb-2"></i><h5>150 м до моря</h5><p>Песчаный пляж</p></div>
+        <div class="col-md-3"><i class="fas fa-tree fa-3x text-success mb-2"></i><h5>Закрытая территория</h5><p>Безопасно для детей</p></div>
+        <div class="col-md-3"><i class="fas fa-child fa-3x text-warning mb-2"></i><h5>Детский бассейн</h5><p>Для каждого номера</p></div>
+        <div class="col-md-3"><i class="fas fa-wifi fa-3x text-info mb-2"></i><h5>Бесплатный Wi‑Fi</h5><p>На всей территории</p></div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <h2 class="text-center mb-4">Наши номера</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        {% for room in rooms %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                {% if room.images.first %}
+                <img src="{{ room.images.first.image.url }}" class="card-img-top" alt="{{ room.name }}">
+                {% else %}
+                <img src="{% static 'images/no-image.jpg' %}" class="card-img-top" alt="Нет фото">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ room.name }}</h5>
+                    <p class="card-text">{{ room.short_description|truncatechars:80 }}</p>
+                    <p class="fw-bold">{{ room.price_per_night }} ₽/сутки</p>
+                    <a href="{% url 'rooms:detail' room.slug %}" class="btn btn-outline-primary w-100">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">Номера временно отсутствуют</p>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4"><a href="{% url 'rooms:list' %}" class="btn btn-primary">Все номера</a></div>
+</section>
+
+<section class="container py-5">
+    <h2 class="text-center mb-4">Отзывы гостей</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for review in reviews %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="mb-2">
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= review.rating %}<i class="fas fa-star text-warning"></i>{% else %}<i class="far fa-star text-warning"></i>{% endif %}
+                        {% endfor %}
+                    </div>
+                    <p class="card-text">«{{ review.text|truncatechars:100 }}»</p>
+                    <footer class="blockquote-footer">{{ review.user.email }}</footer>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">Пока нет отзывов, будьте первым!</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

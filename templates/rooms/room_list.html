@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Все номера – Мускат{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">Наши номера</h1>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for room in rooms %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                {% if room.images.first %}
+                <img src="{{ room.images.first.image.url }}" class="card-img-top" alt="{{ room.name }}">
+                {% else %}
+                <img src="{% static 'images/no-image.jpg' %}" class="card-img-top" alt="Нет фото">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ room.name }}</h5>
+                    <p class="card-text">{{ room.short_description|truncatechars:100 }}</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-users"></i> Взрослых: {{ room.max_adults }}, детей: {{ room.max_children }}</li>
+                        <li><i class="fas fa-bed"></i> {{ room.bed_type }}</li>
+                        <li><i class="fas fa-arrows-alt"></i> {{ room.square }} м²</li>
+                    </ul>
+                    <p class="fw-bold">{{ room.price_per_night }} ₽/сутки</p>
+                    <a href="{% url 'rooms:detail' room.slug %}" class="btn btn-primary w-100">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Нет доступных номеров.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
