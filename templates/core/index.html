@@ -4,14 +4,54 @@
 {% block title %}Гостевой дом "Мускат" – уютный отдых у моря{% endblock %}
 
 {% block content %}
+<!-- ========== СЛАЙДЕР ========== -->
 <section class="hero">
-    <div class="container text-center text-white py-5">
-        <h1 class="display-2 fw-bold">Добро пожаловать в "Мускат"</h1>
-        <p class="lead">Уютные номера в 150 метрах от моря с закрытой территорией и детским бассейном</p>
-        <a href="{% url 'rooms:list' %}" class="btn btn-warning btn-lg mt-3">Забронировать сейчас</a>
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <!-- Слайд 1 (активный) -->
+            <div class="carousel-item active">
+                <div class="slide-bg slide-1"></div>
+                <div class="container text-center text-white py-5 position-relative" style="z-index: 2;">
+                    <h1 class="display-2 fw-bold">Добро пожаловать в "Мускат"</h1>
+                    <p class="lead">Уютные номера в 150 метрах от моря с закрытой территорией и детским бассейном</p>
+                    <a href="{% url 'rooms:list' %}" class="btn btn-warning btn-lg mt-3">Забронировать сейчас</a>
+                </div>
+            </div>
+
+            <!-- Слайд 2 -->
+            <div class="carousel-item">
+                <div class="slide-bg slide-2"></div>
+                <div class="container text-center text-white py-5 position-relative" style="z-index: 2;">
+                    <h1 class="display-2 fw-bold">Отдых для всей семьи</h1>
+                    <p class="lead">Детская площадка, спортивный инвентарь, мангальная зона</p>
+                    <a href="{% url 'rooms:list' %}" class="btn btn-warning btn-lg mt-3">Выбрать номер</a>
+                </div>
+            </div>
+
+            <!-- Слайд 3 -->
+            <div class="carousel-item">
+                <div class="slide-bg slide-3"></div>
+                <div class="container text-center text-white py-5 position-relative" style="z-index: 2;">
+                    <h1 class="display-2 fw-bold">Уют и комфорт</h1>
+                    <p class="lead">Индивидуальный бассейн, Wi‑Fi, кондиционер</p>
+                    <a href="{% url 'rooms:list' %}" class="btn btn-warning btn-lg mt-3">Подробнее</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопки управления -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Предыдущий</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Следующий</span>
+        </button>
     </div>
 </section>
 
+<!-- ========== ПРЕИМУЩЕСТВА ========== -->
 <section class="container py-5">
     <div class="row text-center">
         <div class="col-md-3"><i class="fas fa-swimmer fa-3x text-primary mb-2"></i><h5>150 м до моря</h5><p>Песчаный пляж</p></div>
@@ -21,6 +61,7 @@
     </div>
 </section>
 
+<!-- ========== НОМЕРА ========== -->
 <section class="container py-5">
     <h2 class="text-center mb-4">Наши номера</h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
@@ -47,6 +88,7 @@
     <div class="text-center mt-4"><a href="{% url 'rooms:list' %}" class="btn btn-primary">Все номера</a></div>
 </section>
 
+<!-- ========== ОТЗЫВЫ ========== -->
 <section class="container py-5">
     <h2 class="text-center mb-4">Отзывы гостей</h2>
     <div class="row row-cols-1 row-cols-md-3 g-4">
