@@ -6,11 +6,11 @@
 {% block content %}
 <!-- ========== СЛАЙДЕР ========== -->
 <section class="hero">
-    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
         <div class="carousel-inner">
             <!-- Слайд 1 (активный) -->
             <div class="carousel-item active">
-                <div class="slide-bg slide-1"></div>
+               <div class="slide-bg slide-1"></div>
                 <div class="container text-center text-white py-5 position-relative" style="z-index: 2;">
                     <h1 class="display-2 fw-bold">Добро пожаловать в "Мускат"</h1>
                     <p class="lead">Уютные номера в 150 метрах от моря с закрытой территорией и детским бассейном</p>
@@ -39,6 +39,7 @@
             </div>
         </div>
 
+        
         <!-- Кнопки управления -->
         <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>

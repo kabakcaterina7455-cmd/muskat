@@ -96,9 +96,38 @@ h1, h2, h3, h4, h5 {
 
 
 
+/* ========================================
+   СТИЛИ ДЛЯ СЛАЙДЕРА
+   ======================================== */
+
+#heroCarousel {
+    height: 100%;
+}
+
+.carousel-inner {
+    height: 100%;
+}
+
+
+/* Основной контейнер слайдера — теперь высота 70vh (70% от высоты экрана) */
 .hero {
     position: relative;
+    margin: 0;
+    padding: 0;
+    height: 70vh;           /* или 600px, если хотите фиксированную высоту */
+    min-height: 400px;      /* минимальная высота для маленьких экранов */
+    background-color: #2E5D3A;
+    overflow: hidden;       /* чтобы содержимое не вылезало */
 }
+
+
+/* Каждый слайд занимает всю высоту hero */
+.carousel-item {
+    height: 100%;
+    position: relative;
+}
+
+/* Фоновая картинка – растягивается на всю высоту hero */
 .slide-bg {
     position: absolute;
     top: 0;
@@ -110,8 +139,32 @@ h1, h2, h3, h4, h5 {
     background-repeat: no-repeat;
     z-index: 0;
 }
-.carousel-item {
-    min-height: 600px; /* высота баннера — можете изменить */
+
+/* Контейнер с текстом — по центру по вертикали */
+.carousel-item .container {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Убираем все отступы у body и navbar */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    margin-bottom: 0;
+}
+
+/* Если навигация фиксированная — hero не перекрывает её */
+.navbar.fixed-top + .hero {
+    padding-top: 70%;  /* подберите под высоту вашей навигации */
 }
 
 
