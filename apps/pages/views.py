@@ -8,6 +8,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 from .models import Page
+from django.views.generic import ListView
+from .models import GalleryImage, GalleryCategory
 
 class PageDetailView(DetailView):
     model = Page
@@ -33,3 +35,21 @@ class ContactsView(TemplateView):
         else:
             messages.error(request, "Заполните все поля.")
         return redirect('pages:contacts')
+
+        
+
+
+class GalleryView(ListView):
+    model = GalleryImage
+    template_name = 'pages/gallery.html'
+    context_object_name = 'images'
+    queryset = GalleryImage.objects.filter(is_active=True)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = GalleryCategory.objects.all()
+        slug = self.request.GET.get('category')
+        if slug:
+            context['selected_category'] = slug
+            context['images'] = self.queryset.filter(category__slug=slug)
+        return context

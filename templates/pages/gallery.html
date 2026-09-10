@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Галерея – Мускат{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">Галерея</h1>
+
+    <!-- Фильтр по категориям -->
+    <div class="text-center mb-4">
+        <a href="{% url 'pages:gallery' %}"
+           class="btn {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
+            Все
+        </a>
+        {% for cat in categories %}
+        <a href="?category={{ cat.slug }}"
+           class="btn {% if selected_category == cat.slug %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
+            {{ cat.name }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Карусель -->
+    {% if images %}
+    <div id="galleryCarousel" class="carousel slide gallery-carousel" data-bs-ride="false">
+        <!-- Индикаторы (точки) -->
+        <div class="carousel-indicators">
+            {% for img in images %}
+            <button type="button"
+                    data-bs-target="#galleryCarousel"
+                    data-bs-slide-to="{{ forloop.counter0 }}"
+                    {% if forloop.first %}class="active" aria-current="true"{% endif %}
+                    aria-label="Слайд {{ forloop.counter }}">
+            </button>
+            {% endfor %}
+        </div>
+
+        <!-- Слайды -->
+        <div class="carousel-inner">
+            {% for img in images %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ img.image.url }}" alt="{{ img.title }}" class="gallery-slide-img">
+                {% if img.title %}
+                <div class="carousel-caption d-none d-md-block">
+                    <p>{{ img.title }}</p>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Кнопки навигации -->
+        <button class="carousel-control-prev gallery-arrow" type="button"
+            data-bs-target="#galleryCarousel" data-bs-slide="prev">
+            <span class="gallery-arrow-icon">‹</span>
+        </button>
+        <button class="carousel-control-next gallery-arrow" type="button"
+            data-bs-target="#galleryCarousel" data-bs-slide="next">
+            <span class="gallery-arrow-icon">›</span>
+        </button>
+
+    
+    {% else %}
+    <p class="text-center">Фотографий пока нет.</p>
+    {% endif %}
+</div>
+{% endblock %}

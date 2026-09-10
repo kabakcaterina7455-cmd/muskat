@@ -1,0 +1,19 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div id="content-main">
+    <h1>Массовая загрузка фотографий в галерею</h1>
+    <p>Вы можете выбрать <b>несколько фотографий сразу</b> (зажмите Ctrl или Shift при выборе файлов).</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <div style="margin-top: 20px;">
+            <button type="submit" class="button default">Загрузить все фото</button>
+            <a href="{% url 'admin:pages_galleryimage_changelist' %}" class="button">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

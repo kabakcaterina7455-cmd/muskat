@@ -361,3 +361,119 @@ body {
 #calendar .fc-daygrid-day {
     cursor: default;
 }
+
+
+/* ========================================
+   ГАЛЕРЕЯ — КАРУСЕЛЬ
+   ======================================== */
+
+.gallery-carousel {
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    position: relative;
+}
+
+.gallery-carousel .carousel-inner {
+    height: 550px;
+    background-color: #f0ebe3;
+}
+
+.gallery-slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: #f0ebe3;
+}
+
+/* ---------- СТРЕЛКИ НАВИГАЦИИ ---------- */
+.gallery-carousel .gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.45);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 32px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.85;
+    transition: all 0.2s;
+    z-index: 10;
+    cursor: pointer;
+    padding: 0;
+    padding-bottom: 6px;   /* символы ‹ › чуть выше центра */
+}
+
+.gallery-carousel .gallery-arrow:hover {
+    background: rgba(0, 0, 0, 0.75);
+    opacity: 1;
+    transform: translateY(-50%) scale(1.08);
+}
+
+.gallery-carousel .carousel-control-prev.gallery-arrow {
+    left: 20px;
+}
+
+.gallery-carousel .carousel-control-next.gallery-arrow {
+    right: 20px;
+}
+
+.gallery-arrow-icon {
+    display: block;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+/* Подпись под фото */
+.gallery-carousel .carousel-caption {
+    background: rgba(0,0,0,0.5);
+    border-radius: 6px;
+    padding: 8px 16px;
+    bottom: 20px;
+}
+
+.gallery-carousel .carousel-caption p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Индикаторы-точки внизу */
+.gallery-carousel .carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #888;
+    opacity: 0.6;
+}
+
+.gallery-carousel .carousel-indicators button.active {
+    background-color: #D4884A;
+    opacity: 1;
+}
+
+/* Адаптив для телефонов */
+@media (max-width: 768px) {
+    .gallery-carousel .carousel-inner {
+        height: 300px;
+    }
+    .gallery-carousel .gallery-arrow {
+        width: 38px;
+        height: 38px;
+        font-size: 24px;
+    }
+    .gallery-carousel .carousel-control-prev.gallery-arrow {
+        left: 8px;
+    }
+    .gallery-carousel .carousel-control-next.gallery-arrow {
+        right: 8px;
+    }
+}

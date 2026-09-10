@@ -95,11 +95,21 @@ class SeasonalPrice(models.Model):
 
 
 class Service(models.Model):
-    """Дополнительные услуги (трансфер, SUP, экскурсии)."""
+    """Дополнительные услуги (трансфер, SUP, экскурсии и т.д.)"""
     name = models.CharField(max_length=200, verbose_name="Название")
     slug = models.SlugField(max_length=200, unique=True, blank=True)
     description = models.TextField(verbose_name="Описание")
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
+    price = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        null=True, blank=True,             # ← можно не указывать
+        verbose_name="Цена (₽)"
+    )
+    price_note = models.CharField(
+        max_length=100, blank=True,
+        verbose_name="Текст цены (если не число)",
+        help_text="Например: «по запросу», «от 500 ₽», «бесплатно». "
+                  "Если заполнено — показывается вместо числа."
+    )
     image = models.ImageField(upload_to='services/', blank=True, null=True)
     is_active = models.BooleanField(default=True, verbose_name="Активна")
 
@@ -111,6 +121,17 @@ class Service(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    def get_price_display(self):
+        """Возвращает правильный текст цены: либо price_note, либо число."""
+        if self.price_note:
+            return self.price_note
+        if self.price is not None:
+            # Красиво без .00
+            if self.price == int(self.price):
+                return f"{int(self.price)} ₽"
+            return f"{self.price} ₽"
+        return ""
 
     def __str__(self):
         return self.name

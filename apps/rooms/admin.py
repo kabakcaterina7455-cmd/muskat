@@ -52,9 +52,19 @@ class AmenityAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'is_active')
+    list_display = ('name', 'price', 'price_note', 'is_active')
     list_filter = ('is_active',)
     prepopulated_fields = {'slug': ('name',)}
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'slug', 'description', 'image', 'is_active')
+        }),
+        ('Цена', {
+            'fields': ('price', 'price_note'),
+            'description': 'Заполните либо числовую цену, либо текст. '
+                           'Если оба заполнены — покажется текст.'
+        }),
+    )
 
 
 @admin.register(SeasonalPrice)
