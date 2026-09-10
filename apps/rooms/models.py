@@ -26,12 +26,14 @@ class Room(models.Model):
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Базовая цена за сутки")
     max_adults = models.PositiveSmallIntegerField(default=2, verbose_name="Макс. взрослых")
     max_children = models.PositiveSmallIntegerField(default=1, verbose_name="Макс. детей")
+    quantity = models.PositiveSmallIntegerField(default=1, verbose_name="Количество номеров")
     square = models.PositiveSmallIntegerField(verbose_name="Площадь, м²")
     bed_type = models.CharField(max_length=100, verbose_name="Тип кровати")
     is_active = models.BooleanField(default=True, verbose_name="Активен")
     amenities = models.ManyToManyField(Amenity, blank=True, verbose_name="Удобства")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
 
     class Meta:
         verbose_name = "Номер"

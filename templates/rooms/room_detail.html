@@ -53,7 +53,10 @@
             <div class="card shadow-sm mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Календарь доступности</h5>
-                    <div id="calendar" data-events='{{ booked_events|safe }}'></div>
+                    <div id="calendar"
+                        data-occupied='{{ occupied_by_day|safe }}'
+                        data-quantity='{{ room_quantity }}'>
+                    </div>
                 </div>
             </div>
             <!-- Форма бронирования -->
@@ -75,21 +78,54 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    if (calendarEl) {
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            firstDay: 1,
-            events: JSON.parse(calendarEl.dataset.events || '[]'),
-            selectable: false,
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth'
-            }
-        });
-        calendar.render();
+    let calendarEl = document.getElementById('calendar');
+    if (!calendarEl) return;
+
+    let occupied = {};
+    try {
+        occupied = JSON.parse(calendarEl.dataset.occupied || '{}');
+    } catch(e) {
+        occupied = {};
     }
+
+    let totalQuantity = parseInt(calendarEl.dataset.quantity || '1', 10);
+
+    let calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        firstDay: 1,
+        locale: 'ru',
+        height: 'auto',
+        contentHeight: 'auto',
+        fixedWeekCount: false,
+        selectable: false,
+        headerToolbar: {
+            left: 'prev,next',
+            center: 'title',
+            right: 'today'
+        },
+        buttonText: { today: 'Сегодня' },
+
+        dayCellDidMount: function(arg) {
+            let key = arg.date.toISOString().slice(0, 10);
+            let occupiedCount = occupied[key] || 0;
+            let freeCount = totalQuantity - occupiedCount;
+
+            let tooltipText;
+            if (freeCount <= 0) {
+                tooltipText = 'Все номера заняты';
+            } else if (freeCount === 1) {
+                tooltipText = 'Свободен 1 номер';
+            } else if (freeCount < 5) {
+                tooltipText = 'Свободно ' + freeCount + ' номера';
+            } else {
+                tooltipText = 'Свободно ' + freeCount + ' номеров';
+            }
+
+            arg.el.setAttribute('title', tooltipText);
+        }
+    });
+
+    calendar.render();
 });
 </script>
 {% endblock %}

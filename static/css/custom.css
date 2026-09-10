@@ -135,7 +135,7 @@ h1, h2, h3, h4, h5 {
     width: 100%;
     height: 100%;
     background-size: cover;
-    background-position: center;
+    background-position: center 47%;
     background-repeat: no-repeat;
     z-index: 0;
 }
@@ -177,4 +177,187 @@ body {
 }
 .slide-3 {
     background-image: url('/static/images/hero/slide3.jpg');
+}
+
+
+
+/* ========================================
+   КАРТОЧКИ НОМЕРОВ НА ГЛАВНОЙ — ЧИСТЫЙ БЛОК
+   ======================================== */
+
+/* Обёртка картинки — фиксированная высота */
+.room-card-img-wrapper {
+    position: relative;
+    width: 100%;
+    height: 220px;              /* высота фото — можно менять */
+    overflow: hidden;
+    background-color: #f0ebe3;  /* запасной фон, если картинки нет */
+}
+
+/* Картинка заполняет обёртку, не искажаясь */
+.room-card-img-wrapper img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Карточка — flex-колонка, чтобы кнопка была внизу */
+.card.h-100 {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Тело карточки тянется и прижимает низ */
+.card-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Описание — фиксированной высоты, чтобы карточки были ровные */
+.card-text {
+    min-height: 60px;
+    max-height: 90px;         /* высота блока описания */
+    overflow-y: auto;         /* прокрутка, если текст не помещается */
+    margin-bottom: 8px;
+    padding-right: 4px;       /* немного места для скроллбара */
+}
+
+/* Красивый тонкий скроллбар */
+.card-text::-webkit-scrollbar {
+    width: 6px;
+}
+.card-text::-webkit-scrollbar-track {
+    background: #f0ebe3;
+    border-radius: 3px;
+}
+.card-text::-webkit-scrollbar-thumb {
+    background: #2E5D3A;
+    border-radius: 3px;
+}
+
+/* Цена и кнопка прижимаются к низу */
+.card-body .mt-auto {
+    margin-top: auto;
+}
+
+/* Кнопка «Подробнее» */
+.card-body .btn {
+    margin-top: 8px;
+}
+
+/* ========================================
+   КАЛЕНДАРЬ ДОСТУПНОСТИ (FullCalendar 6)
+   ======================================== */
+
+#calendar {
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+}
+
+/* Панель управления сверху */
+#calendar .fc-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px !important;
+}
+
+#calendar .fc-toolbar-title {
+    font-size: 0.95rem !important;
+    font-family: 'Playfair Display', serif;
+    color: #2C2C2C;
+}
+
+/* Кнопки */
+#calendar .fc-button {
+    background-color: #1A3B5C !important;
+    border-color: #1A3B5C !important;
+    color: #fff !important;
+    font-size: 0.72rem !important;
+    padding: 4px 8px !important;
+    line-height: 1.2 !important;
+    box-shadow: none !important;
+    text-transform: none !important;
+    border-radius: 4px !important;
+}
+
+#calendar .fc-button:hover {
+    background-color: #14304C !important;
+    border-color: #14304C !important;
+}
+
+#calendar .fc-button:focus,
+#calendar .fc-button:active {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Заголовки дней недели */
+#calendar .fc-col-header-cell {
+    background-color: #F0EBE3;
+    font-weight: 600;
+    font-size: 0.72rem;
+    color: #2C2C2C;
+    padding: 4px 0;
+}
+
+#calendar .fc-col-header-cell-cushion {
+    color: #2C2C2C;
+    text-decoration: none;
+}
+
+/* Сетка */
+#calendar .fc-scrollgrid,
+#calendar .fc-scrollgrid td,
+#calendar .fc-scrollgrid th {
+    border-color: #e0dcd4 !important;
+}
+
+/* Числа дня */
+#calendar .fc-daygrid-day {
+    background-color: #fff;
+    min-height: 38px;
+}
+
+#calendar .fc-daygrid-day-number {
+    font-size: 0.75rem;
+    color: #2C2C2C;
+    padding: 2px 4px;
+    text-decoration: none;
+}
+
+/* Сегодняшний день */
+#calendar .fc-day-today {
+    background-color: #F0EBE3 !important;
+}
+
+/* Занятые даты */
+#calendar .fc-bg-event {
+    opacity: 0.35 !important;
+}
+
+/* Минимальная высота, чтобы не «схлопывался» */
+#calendar .fc-view-harness {
+    min-height: 260px;
+}
+
+/* Бейдж со свободными номерами в календаре */
+.free-badge {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 5px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #fff;
+    vertical-align: middle;
+}
+
+/* Ячейки календаря */
+#calendar .fc-daygrid-day {
+    cursor: default;
 }

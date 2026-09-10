@@ -6,30 +6,41 @@
 {% block content %}
 <div class="container py-5">
     <h1 class="text-center mb-4">Наши номера</h1>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {% for room in rooms %}
         <div class="col">
-            <div class="card h-100 shadow-sm">
-                {% if room.images.first %}
-                <img src="{{ room.images.first.image.url }}" class="card-img-top" alt="{{ room.name }}">
-                {% else %}
-                <img src="{% static 'images/no-image.jpg' %}" class="card-img-top" alt="Нет фото">
-                {% endif %}
-                <div class="card-body">
+            <div class="card h-100 shadow-sm d-flex flex-column">
+                <!-- Обёртка картинки -->
+                <div class="room-card-img-wrapper">
+                    {% if room.images.first %}
+                    <img src="{{ room.images.first.image.url }}" alt="{{ room.name }}">
+                    {% else %}
+                    <img src="{% static 'images/no-image.jpg' %}" alt="Нет фото">
+                    {% endif %}
+                </div>
+
+                <!-- Тело карточки -->
+                <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ room.name }}</h5>
-                    <p class="card-text">{{ room.short_description|truncatechars:100 }}</p>
-                    <ul class="list-unstyled">
+                    <p class="card-text">{{ room.short_description }}</p>
+
+                    <!-- Характеристики -->
+                    <ul class="list-unstyled small text-muted mb-2">
                         <li><i class="fas fa-users"></i> Взрослых: {{ room.max_adults }}, детей: {{ room.max_children }}</li>
                         <li><i class="fas fa-bed"></i> {{ room.bed_type }}</li>
                         <li><i class="fas fa-arrows-alt"></i> {{ room.square }} м²</li>
                     </ul>
-                    <p class="fw-bold">{{ room.price_per_night }} ₽/сутки</p>
+
+                    <!-- Цена прижата к низу -->
+                    <p class="fw-bold fs-5 mt-auto mb-2">{{ room.price_per_night }} ₽/сутки</p>
+
+                    <!-- Кнопка всегда внизу -->
                     <a href="{% url 'rooms:detail' room.slug %}" class="btn btn-primary w-100">Подробнее</a>
                 </div>
             </div>
         </div>
         {% empty %}
-        <p>Нет доступных номеров.</p>
+        <p class="text-center">Нет доступных номеров.</p>
         {% endfor %}
     </div>
 </div>
