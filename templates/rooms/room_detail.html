@@ -106,23 +106,38 @@ document.addEventListener('DOMContentLoaded', function() {
         buttonText: { today: 'Сегодня' },
 
         dayCellDidMount: function(arg) {
-            let key = arg.date.toISOString().slice(0, 10);
-            let occupiedCount = occupied[key] || 0;
-            let freeCount = totalQuantity - occupiedCount;
+    let key = arg.date.toISOString().slice(0, 10);
+    let occupiedCount = occupied[key] || 0;
+    let freeCount = totalQuantity - occupiedCount;
 
-            let tooltipText;
-            if (freeCount <= 0) {
-                tooltipText = 'Все номера заняты';
-            } else if (freeCount === 1) {
-                tooltipText = 'Свободен 1 номер';
-            } else if (freeCount < 5) {
-                tooltipText = 'Свободно ' + freeCount + ' номера';
-            } else {
-                tooltipText = 'Свободно ' + freeCount + ' номеров';
-            }
+    // Текст подсказки
+    let tooltipText;
+    if (freeCount <= 0) {
+        tooltipText = 'Все номера заняты';
+    } else if (freeCount === 1) {
+        tooltipText = 'Свободен 1 номер';
+    } else if (freeCount < 5) {
+        tooltipText = 'Свободно ' + freeCount + ' номера';
+    } else {
+        tooltipText = 'Свободно ' + freeCount + ' номеров';
+    }
 
-            arg.el.setAttribute('title', tooltipText);
-        }
+    arg.el.setAttribute('title', tooltipText);
+
+    // Находим число дня внутри ячейки
+    let dayTop = arg.el.querySelector('.fc-daygrid-day-top');
+    
+    // Цветовая подсветка
+    if (freeCount <= 0) {
+        // Всё занято — красный фон
+        arg.el.style.backgroundColor = '#f8d7da';
+        arg.el.style.opacity = '0.85';
+    } else if (freeCount < totalQuantity) {
+        // Частично занято — жёлтый фон
+        arg.el.style.backgroundColor = '#fff3cd';
+    }
+    // Свободные дни оставляем без подсветки
+}
     });
 
     calendar.render();
