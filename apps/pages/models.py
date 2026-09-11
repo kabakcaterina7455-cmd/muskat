@@ -1,10 +1,10 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
+from django.utils.text import slugify
 from ckeditor_uploader.fields import RichTextUploadingField
 
+
 class Page(models.Model):
+    """Контентная страница (Галерея, Для детей, FAQ, Услуги)."""
     slug = models.SlugField(max_length=200, unique=True, verbose_name="ЧПУ")
     title = models.CharField(max_length=200, verbose_name="Заголовок")
     content = RichTextUploadingField(verbose_name="Содержание")
@@ -20,8 +20,6 @@ class Page(models.Model):
 
     def __str__(self):
         return self.title
-
-from django.utils.text import slugify
 
 
 class GalleryCategory(models.Model):
@@ -65,4 +63,21 @@ class GalleryImage(models.Model):
         verbose_name_plural = "Фото галереи"
 
     def __str__(self):
-        return self.title or f"Фото #{self.id}"        
+        return self.title or f"Фото #{self.id}"
+
+
+class FAQItem(models.Model):
+    """Вопрос-ответ для страницы FAQ."""
+    question = models.CharField(max_length=300, verbose_name="Вопрос")
+    answer = models.TextField(verbose_name="Ответ")
+    order = models.PositiveSmallIntegerField(default=0, verbose_name="Порядок")
+    is_active = models.BooleanField(default=True, verbose_name="Активен")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "Вопрос FAQ"
+        verbose_name_plural = "Вопросы FAQ"
+
+    def __str__(self):
+        return self.question

@@ -10,6 +10,8 @@ from django.urls import reverse
 from .models import Page
 from django.views.generic import ListView
 from .models import GalleryImage, GalleryCategory
+from .models import FAQItem
+
 
 class PageDetailView(DetailView):
     model = Page
@@ -53,3 +55,13 @@ class GalleryView(ListView):
             context['selected_category'] = slug
             context['images'] = self.queryset.filter(category__slug=slug)
         return context
+
+
+
+
+class FAQView(ListView):
+    """Страница FAQ с аккордеоном."""
+    model = FAQItem
+    template_name = 'pages/faq.html'
+    context_object_name = 'faq_items'
+    queryset = FAQItem.objects.filter(is_active=True)        

@@ -33,11 +33,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'rooms:list' %}">Номера</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'pages:page' 'gallery' %}">Галерея</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'pages:gallery' %}">Галерея</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'core:services' %}">Услуги</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'pages:page' 'for-kids' %}">Для детей</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'pages:page' 'faq' %}">FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:for_kids' %}">Для детей</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'pages:page' 'faq' %}">FAQ</a></li>   
                     <li class="nav-item"><a class="nav-link" href="{% url 'pages:contacts' %}">Контакты</a></li>
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
@@ -80,15 +79,15 @@
             <div class="row">
                 <div class="col-md-4">
                     <h5>Гостевой дом "Мускат"</h5>
-                    <p><i class="fas fa-map-marker-alt"></i> ул. Морская, 15, п. Береговой</p>
-                    <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+                    <p><i class="fas fa-map-marker-alt"></i> ул. Гицба, д. 1а, г. Пицунда, Абхазия</p>
+                    <p><i class="fas fa-phone"></i> +7 (918) 917-77-76</p>
                     <p><i class="fas fa-envelope"></i> info@muscat.ru</p>
                 </div>
                 <div class="col-md-4">
                     <h5>Быстрые ссылки</h5>
                     <ul class="list-unstyled">
                         <li><a href="{% url 'rooms:list' %}">Номера</a></li>
-                        <li><a href="{% url 'pages:page' 'services' %}">Услуги</a></li>
+                        <li><a href="{% url 'core:services' %}">Услуги</a></li>
                         <li><a href="{% url 'pages:page' 'faq' %}">FAQ</a></li>
                     </ul>
                 </div>

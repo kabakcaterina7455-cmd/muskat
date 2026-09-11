@@ -477,3 +477,188 @@ body {
         right: 8px;
     }
 }
+
+/* ========================================
+   СТРАНИЦА "ДЛЯ ДЕТЕЙ"
+   ======================================== */
+
+.kids-page .lead {
+    font-size: 1.15rem;
+    color: #5A5A5A;
+    max-width: 800px;
+    margin: 0 auto 40px;
+}
+
+/* Карточки с иконками */
+.kids-card {
+    transition: transform 0.25s, box-shadow 0.25s;
+    border-radius: 12px;
+}
+
+.kids-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12) !important;
+}
+
+.kids-card .card-body {
+    padding: 30px;
+}
+
+.kids-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2E5D3A, #1A3B5C);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 18px;
+}
+
+.kids-card .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #2C2C2C;
+}
+
+.kids-card .card-text {
+    color: #5A5A5A;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Отдельные блоки (с серым фоном) */
+.kids-block {
+    background: #F0EBE3;
+    padding: 30px;
+    border-radius: 12px;
+}
+
+.kids-block h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    color: #2C2C2C;
+    margin: 0;
+}
+
+.kids-block p {
+    color: #5A5A5A;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* Списки с галочками */
+.kids-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.kids-list li {
+    padding: 8px 0;
+    color: #2C2C2C;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.kids-list li i {
+    font-size: 0.9rem;
+}
+
+/* Призыв к действию */
+.kids-cta {
+    background: linear-gradient(135deg, #2E5D3A, #1A3B5C);
+    color: #fff;
+    padding: 40px 30px;
+    border-radius: 12px;
+}
+
+.kids-cta h4 {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.kids-cta p {
+    color: #f0ebe3;
+    margin-bottom: 20px;
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .kids-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 22px;
+    }
+    .kids-block {
+        padding: 22px;
+    }
+    .kids-cta {
+        padding: 28px 18px;
+    }
+}
+
+/* ========================================
+   СТРАНИЦА FAQ
+   ======================================== */
+
+.faq-accordion .accordion-item {
+    border: none;
+    margin-bottom: 12px;
+    border-radius: 10px !important;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.faq-accordion .accordion-button {
+    background-color: #fff;
+    color: #2C2C2C;
+    font-weight: 600;
+    font-size: 1.05rem;
+    padding: 18px 24px;
+    border: none;
+    box-shadow: none !important;
+}
+
+.faq-accordion .accordion-button:not(.collapsed) {
+    background-color: #2E5D3A;
+    color: #fff;
+}
+
+.faq-accordion .accordion-button:focus {
+    box-shadow: none;
+    border: none;
+}
+
+.faq-accordion .accordion-button:not(.collapsed)::after {
+    filter: brightness(0) invert(1);
+}
+
+.faq-accordion .accordion-body {
+    padding: 18px 24px;
+    color: #5A5A5A;
+    line-height: 1.6;
+    background-color: #FBF7F0;
+}
+
+.faq-cta {
+    background: linear-gradient(135deg, #2E5D3A, #1A3B5C);
+    color: #fff;
+    padding: 40px 30px;
+    border-radius: 12px;
+}
+
+.faq-cta h4 {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.faq-cta p {
+    color: #f0ebe3;
+    margin-bottom: 20px;
+}

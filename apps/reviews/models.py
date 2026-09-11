@@ -1,15 +1,27 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.conf import settings
 from apps.rooms.models import Room
 
+
 class Review(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='reviews')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
+    """Отзыв гостя о номере."""
+    room = models.ForeignKey(
+        Room,
+        on_delete=models.CASCADE,
+        related_name='reviews',
+        verbose_name="Номер"
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='reviews',
+        verbose_name="Пользователь"
+    )
     text = models.TextField(verbose_name="Текст отзыва")
-    rating = models.PositiveSmallIntegerField(verbose_name="Оценка", choices=[(i, i) for i in range(1, 6)])
+    rating = models.PositiveSmallIntegerField(
+        verbose_name="Оценка",
+        choices=[(i, i) for i in range(1, 6)]
+    )
     is_moderated = models.BooleanField(default=False, verbose_name="Одобрено")
     created_at = models.DateTimeField(auto_now_add=True)
 

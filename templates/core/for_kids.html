@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Для детей – Мускат{% endblock %}
+
+{% block content %}
+<section class="container py-5 kids-page">
+
+    <!-- ЗАГОЛОВОК -->
+    <h1 class="text-center mb-3">Для детей</h1>
+    <p class="text-center lead mb-5">
+        Всё, чтобы ваш ребёнок чувствовал себя как дома
+    </p>
+
+    <!-- Текст из админки -->
+    {% if page and page.content %}
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10">
+            {{ page.content|safe }}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ========== КАРТОЧКИ С ИКОНКАМИ ========== -->
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card kids-card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="kids-icon"><i class="fas fa-child"></i></div>
+                    <h5 class="card-title">Детская площадка</h5>
+                    <p class="card-text">Качели, горка, песочница и спортивный комплекс — прямо на территории.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card kids-card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="kids-icon"><i class="fas fa-swimmer"></i></div>
+                    <h5 class="card-title">Детский бассейн</h5>
+                    <p class="card-text">Отдельный мелкий бассейн для малышей с подогревом. Безопасная зона.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card kids-card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="kids-icon"><i class="fas fa-birthday-cake"></i></div>
+                    <h5 class="card-title">Праздники</h5>
+                    <p class="card-text">Организуем день рождения: шарики, аниматор, торт по заказу.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card kids-card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="kids-icon"><i class="fas fa-gamepad"></i></div>
+                    <h5 class="card-title">Игровая зона</h5>
+                    <p class="card-text">Настольные игры, конструкторы, книги и мультики в общем холле.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card kids-card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="kids-icon"><i class="fas fa-biking"></i></div>
+                    <h5 class="card-title">Спортинвентарь</h5>
+                    <p class="card-text">Велосипеды, самокаты, мячи, бадминтон — всё бесплатно для гостей.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card kids-card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="kids-icon"><i class="fas fa-baby"></i></div>
+                    <h5 class="card-title">Для малышей</h5>
+                    <p class="card-text">Детские кроватки, стульчики для кормления, ванночки — по запросу.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== ЧТО ВХОДИТ ========== -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="kids-block h-100">
+                <h3 class="mb-3">Что мы предоставляем бесплатно</h3>
+                <ul class="kids-list">
+                    <li><i class="fas fa-check text-success me-2"></i>Детская кроватка в номер</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Стульчик для кормления</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Ванночка для купания малыша</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Игрушки и настольные игры</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Велосипеды и самокаты</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Мячи, бадминтон, скакалки</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="kids-block h-100">
+                <h3 class="mb-3">За дополнительную плату</h3>
+                <ul class="kids-list">
+                    <li><i class="fas fa-plus text-warning me-2"></i>Няня на несколько часов</li>
+                    <li><i class="fas fa-plus text-warning me-2"></i>Аниматор на праздник</li>
+                    <li><i class="fas fa-plus text-warning me-2"></i>Организация дня рождения</li>
+                    <li><i class="fas fa-plus text-warning me-2"></i>Детское меню в номер</li>
+                    <li><i class="fas fa-plus text-warning me-2"></i>Мастер-классы для детей</li>
+                    <li><i class="fas fa-plus text-warning me-2"></i>Аренда детского автокресла</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ГАЛЕРЕЯ ========== -->
+    {% if kids_photos %}
+    <h2 class="text-center mb-4">Как у нас весело</h2>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 mb-5">
+        {% for img in kids_photos %}
+        <div class="col">
+            <a href="{{ img.image.url }}" target="_blank" class="gallery-item">
+                <img src="{{ img.image.url }}" alt="{{ img.title }}" class="gallery-img">
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ========== ПРИЗЫВ К ДЕЙСТВИЮ ========== -->
+    <div class="kids-cta text-center">
+        <h4>Готовы приехать с детьми?</h4>
+        <p>Забронируйте номер — мы позаботимся о комфорте всей семьи.</p>
+        <a href="{% url 'rooms:list' %}" class="btn btn-warning btn-lg">
+            Выбрать номер
+        </a>
+    </div>
+
+</section>
+{% endblock %}

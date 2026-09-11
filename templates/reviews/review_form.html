@@ -1,14 +1,28 @@
 {% extends 'base.html' %}
 
-{% block title %}Оставить отзыв о {{ room.name }}{% endblock %}
+{% block title %}Оставить отзыв – {{ room.name }}{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-    <h2>Оставить отзыв о номере "{{ room.name }}"</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Отправить отзыв</button>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4">Оставить отзыв о номере «{{ room.name }}»</h1>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-1"></i> Отправить
+                        </button>
+                        <a href="{% url 'rooms:detail' room.slug %}" class="btn btn-outline-secondary">
+                            Отмена
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

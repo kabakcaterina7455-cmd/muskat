@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Вопросы и ответы – Мускат{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">Вопросы и ответы</h1>
+
+    <p class="lead text-center mb-5">
+        Собрали ответы на самые частые вопросы наших гостей.
+        Если не нашли ответ — напишите нам, и мы поможем.
+    </p>
+
+    {% if faq_items %}
+    <div class="accordion faq-accordion" id="faqAccordion">
+        {% for item in faq_items %}
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#faq{{ item.id }}">
+                    {{ item.question }}
+                </button>
+            </h2>
+            <div id="faq{{ item.id }}"
+                 class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                 data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    {{ item.answer|linebreaks }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-muted">Вопросы скоро появятся.</p>
+    {% endif %}
+
+    <div class="faq-cta mt-5 text-center">
+        <h4>Не нашли ответ?</h4>
+        <p class="mb-3">Свяжитесь с нами — мы всегда на связи.</p>
+        <a href="{% url 'pages:contacts' %}" class="btn btn-warning btn-lg">
+            Написать нам
+        </a>
+    </div>
+</div>
+{% endblock %}

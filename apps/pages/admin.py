@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.core.files.base import File
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
-
+from .models import FAQItem
 from .models import Page, GalleryCategory, GalleryImage
 
 
@@ -141,3 +141,13 @@ class GalleryImageAdmin(admin.ModelAdmin):
             'opts': self.model._meta,
         }
         return render(request, 'admin/bulk_upload.html', context)
+
+        
+
+
+@admin.register(FAQItem)
+class FAQItemAdmin(admin.ModelAdmin):
+    list_display = ('question', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('question', 'answer')
