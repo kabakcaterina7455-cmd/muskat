@@ -30,7 +30,7 @@
                 <div class="slide-bg slide-3"></div>
                 <div class="container text-center text-white py-5 position-relative" style="z-index: 2;">
                     <h1 class="display-2 fw-bold">Уют и комфорт</h1>
-                    <p class="lead">Индивидуальный бассейн, Wi‑Fi, кондиционер</p>
+                    <p class="lead">Бассейн, Wi‑Fi, кондиционер</p>
                     <a href="{% url 'rooms:list' %}" class="btn btn-warning btn-lg mt-3">Подробнее</a>
                 </div>
             </div>
@@ -74,6 +74,18 @@
 
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ room.name }}</h5>
+                    {% if room.average_rating %}
+                    <div class="mb-2">
+                        {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= room.average_rating %}
+                        <i class="fas fa-star text-warning"></i>
+                    {% else %}
+                        <i class="far fa-star text-warning"></i>
+                    {% endif %}
+                    {% endfor %}
+                    <small class="text-muted ms-1">{{ room.average_rating }} ({{ room.reviews_count }} отзывов)</small>
+                    </div>
+                    {% endif %}
                     <p class="card-text">{{ room.short_description|truncatechars:80 }}</p>
                     <p class="fw-bold fs-5 mt-auto mb-2">{{ room.price_per_night }} ₽/сутки</p>
                     <a href="{% url 'rooms:detail' room.slug %}" class="btn btn-outline-primary w-100">Подробнее</a>

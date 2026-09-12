@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.conf import settings
 from django.views import View
@@ -11,7 +12,7 @@ from .forms import BookingForm
 
 
 class BookingCreateView(View):
-    """Создание бронирования с проверкой доступности."""
+    """Создание бронирования."""
 
     def get(self, request, room_slug):
         room = get_object_or_404(Room, slug=room_slug, is_active=True)
@@ -45,23 +46,15 @@ class BookingCreateView(View):
         return render(request, 'bookings/booking_form.html', {'room': room, 'form': form})
 
     def is_room_available(self, room, check_in, check_out):
-        """
-        Проверяет, есть ли хотя бы один свободный номер этого типа
-        на выбранные даты. Учитывает поле quantity.
-        """
         conflicting_count = Booking.objects.filter(
             room=room,
             check_in__lt=check_out,
             check_out__gt=check_in,
             status__in=['pending', 'confirmed']
         ).count()
-
-        # Свободно, если занято меньше, чем всего номеров этого типа
         return conflicting_count < room.quantity
 
     def send_notifications(self, booking):
-        """Отправляет уведомления гостю и менеджеру."""
-        # Письмо гостю
         send_mail(
             subject=f"Заявка #{booking.id} принята",
             message=f"Здравствуйте, {booking.guest_name}!\n"
@@ -72,7 +65,6 @@ class BookingCreateView(View):
             recipient_list=[booking.guest_email],
             fail_silently=True,
         )
-        # Письмо менеджеру
         send_mail(
             subject=f"Новая заявка #{booking.id}",
             message=f"Гость: {booking.guest_name}, тел. {booking.guest_phone}\n"
@@ -86,8 +78,24 @@ class BookingCreateView(View):
 
 
 class BookingSuccessView(View):
-    """Страница успешного создания бронирования."""
+    """Страница успешного бронирования."""
 
     def get(self, request, booking_id):
         booking = get_object_or_404(Booking, id=booking_id)
         return render(request, 'bookings/booking_success.html', {'booking': booking})
+
+
+class BookingCancelView(LoginRequiredMixin, View):
+    """Отмена брони гостем."""
+
+    def post(self, request, booking_id):
+        booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+
+        if booking.can_cancel:
+            booking.status = 'canceled'
+            booking.save()
+            messages.success(request, f"Бронь #{booking.id} отменена.")
+        else:
+            messages.error(request, "Эту бронь нельзя отменить (до заезда меньше 3 дней).")
+
+        return redirect('accounts:profile')

@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Оставить отзыв – {{ room.name }}{% endblock %}
+{% block title %}Оставить отзыв – Мускат{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h1 class="mb-4">Оставить отзыв о номере «{{ room.name }}»</h1>
+            <h1 class="mb-4">Оставить отзыв</h1>
 
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -16,7 +16,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-paper-plane me-1"></i> Отправить
                         </button>
-                        <a href="{% url 'rooms:detail' room.slug %}" class="btn btn-outline-secondary">
+                        <a href="{% url 'core:home' %}" class="btn btn-outline-secondary">
                             Отмена
                         </a>
                     </form>

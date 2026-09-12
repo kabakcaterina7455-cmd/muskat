@@ -27,10 +27,29 @@
                     <span class="carousel-control-next-icon"></span>
                 </button>
             </div>
+
             <!-- Описание -->
             <div class="mt-4">
                 <h2>{{ room.name }}</h2>
+
+                {% if room.average_rating %}
+                <div class="mb-3">
+                    <span class="fs-5">
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= room.average_rating %}
+                                <i class="fas fa-star text-warning"></i>
+                            {% else %}
+                                <i class="far fa-star text-warning"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    <span class="ms-2 fw-bold">{{ room.average_rating }}</span>
+                    <small class="text-muted">({{ room.reviews_count }} отзывов)</small>
+                </div>
+                {% endif %}
+
                 <p>{{ room.description }}</p>
+
                 <h4>Удобства</h4>
                 <ul>
                     {% for amenity in room.amenities.all %}
@@ -39,54 +58,8 @@
                 </ul>
             </div>
         </div>
+
         <div class="col-lg-4">
-
-
-        <!-- ========== ОТЗЫВЫ ========== -->
-            <div class="mt-5">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4>Отзывы гостей</h4>
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'reviews:create' room.id %}" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-pen me-1"></i> Оставить отзыв
-                    </a>
-                    {% else %}
-                    <a href="{% url 'accounts:login' %}?next={% url 'reviews:create' room.id %}" class="btn btn-outline-secondary btn-sm">
-                        Войдите, чтобы оставить отзыв
-                    </a>
-                    {% endif %}
-                </div>
-
-                {% for review in room.reviews.all %}
-                    {% if review.is_moderated %}
-                    <div class="card mb-3 shadow-sm border-0">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <strong>{{ review.user.email }}</strong>
-                                    <small class="text-muted ms-2">{{ review.created_at|date:"d.m.Y" }}</small>
-                                </div>
-                                <div>
-                                    {% for i in "12345"|make_list %}
-                                        {% if forloop.counter <= review.rating %}
-                                            <i class="fas fa-star text-warning"></i>
-                                        {% else %}
-                                            <i class="far fa-star text-warning"></i>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <p class="mb-0">{{ review.text }}</p>
-                        </div>
-                    </div>
-                    {% endif %}
-                {% empty %}
-                    <p class="text-muted">Пока нет отзывов. Будьте первым!</p>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="col-lg-4">    
             <!-- Информация и бронирование -->
             <div class="card shadow-sm mb-3">
                 <div class="card-body">
@@ -96,6 +69,7 @@
                     <p><i class="fas fa-arrows-alt"></i> {{ room.square }} м²</p>
                 </div>
             </div>
+
             <!-- Календарь -->
             <div class="card shadow-sm mb-3">
                 <div class="card-body">
@@ -106,6 +80,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Форма бронирования -->
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -115,6 +90,23 @@
                         {{ form.as_p }}
                         <button type="submit" class="btn btn-warning w-100">Забронировать</button>
                     </form>
+                </div>
+            </div>
+
+            <!-- Кнопка оставить отзыв -->
+            <div class="card shadow-sm mt-3">
+                <div class="card-body text-center">
+                    <h6 class="mb-3">Понравился номер?</h6>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'reviews:create' %}?room={{ room.id }}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-pen me-1"></i> Оставить отзыв
+                    </a>
+                    {% else %}
+                    <a href="{% url 'accounts:login' %}?next={% url 'reviews:create' %}?room={{ room.id }}"
+                       class="btn btn-outline-secondary w-100">
+                        Войдите, чтобы оставить отзыв
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -153,38 +145,30 @@ document.addEventListener('DOMContentLoaded', function() {
         buttonText: { today: 'Сегодня' },
 
         dayCellDidMount: function(arg) {
-    let key = arg.date.toISOString().slice(0, 10);
-    let occupiedCount = occupied[key] || 0;
-    let freeCount = totalQuantity - occupiedCount;
+            let key = arg.date.toISOString().slice(0, 10);
+            let occupiedCount = occupied[key] || 0;
+            let freeCount = totalQuantity - occupiedCount;
 
-    // Текст подсказки
-    let tooltipText;
-    if (freeCount <= 0) {
-        tooltipText = 'Все номера заняты';
-    } else if (freeCount === 1) {
-        tooltipText = 'Свободен 1 номер';
-    } else if (freeCount < 5) {
-        tooltipText = 'Свободно ' + freeCount + ' номера';
-    } else {
-        tooltipText = 'Свободно ' + freeCount + ' номеров';
-    }
+            let tooltipText;
+            if (freeCount <= 0) {
+                tooltipText = 'Все номера заняты';
+            } else if (freeCount === 1) {
+                tooltipText = 'Свободен 1 номер';
+            } else if (freeCount < 5) {
+                tooltipText = 'Свободно ' + freeCount + ' номера';
+            } else {
+                tooltipText = 'Свободно ' + freeCount + ' номеров';
+            }
 
-    arg.el.setAttribute('title', tooltipText);
+            arg.el.setAttribute('title', tooltipText);
 
-    // Находим число дня внутри ячейки
-    let dayTop = arg.el.querySelector('.fc-daygrid-day-top');
-    
-    // Цветовая подсветка
-    if (freeCount <= 0) {
-        // Всё занято — красный фон
-        arg.el.style.backgroundColor = '#f8d7da';
-        arg.el.style.opacity = '0.85';
-    } else if (freeCount < totalQuantity) {
-        // Частично занято — жёлтый фон
-        arg.el.style.backgroundColor = '#fff3cd';
-    }
-    // Свободные дни оставляем без подсветки
-}
+            if (freeCount <= 0) {
+                arg.el.style.backgroundColor = '#f8d7da';
+                arg.el.style.opacity = '0.85';
+            } else if (freeCount < totalQuantity) {
+                arg.el.style.backgroundColor = '#fff3cd';
+            }
+        }
     });
 
     calendar.render();

@@ -1,12 +1,19 @@
 from django import forms
 from .models import Review
+from apps.rooms.models import Room
 
 
 class ReviewForm(forms.ModelForm):
-    """Форма добавления отзыва."""
+    room = forms.ModelChoiceField(
+        queryset=Room.objects.filter(is_active=True),
+        label="Номер",
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-select'}),
+    )
+
     class Meta:
         model = Review
-        fields = ['text', 'rating']
+        fields = ['room', 'text', 'rating']
         widgets = {
             'text': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -16,6 +23,7 @@ class ReviewForm(forms.ModelForm):
             'rating': forms.Select(attrs={'class': 'form-select'}),
         }
         labels = {
+            'room': 'Какой номер вы бронировали?',
             'text': 'Ваш отзыв',
             'rating': 'Оценка',
         }

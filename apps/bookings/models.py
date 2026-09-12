@@ -1,9 +1,8 @@
-from django.db import models
-
-# Create your models here.
+from datetime import date
 from django.db import models
 from django.conf import settings
 from apps.rooms.models import Room
+
 
 class Booking(models.Model):
     STATUS_CHOICES = [
@@ -13,8 +12,14 @@ class Booking(models.Model):
         ('completed', 'Завершено'),
     ]
 
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='bookings')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='bookings')
+    room = models.ForeignKey(
+        Room, on_delete=models.CASCADE,
+        related_name='bookings', verbose_name="Номер"
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='bookings', verbose_name="Пользователь"
+    )
     guest_name = models.CharField(max_length=200, verbose_name="Имя гостя")
     guest_phone = models.CharField(max_length=20, verbose_name="Телефон")
     guest_email = models.EmailField(verbose_name="Email")
@@ -24,7 +29,10 @@ class Booking(models.Model):
     children = models.PositiveSmallIntegerField(default=0, verbose_name="Дети")
     total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Итоговая цена")
     comment = models.TextField(blank=True, verbose_name="Комментарий")
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="Статус")
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES,
+        default='pending', verbose_name="Статус"
+    )
     # Архитектурный задел под онлайн-оплату
     payment_id = models.CharField(max_length=100, blank=True, null=True, verbose_name="ID платежа")
     is_paid = models.BooleanField(default=False, verbose_name="Оплачено")
@@ -47,3 +55,30 @@ class Booking(models.Model):
         if not self.total_price:
             self.total_price = self.calculate_total_price()
         super().save(*args, **kwargs)
+
+    # ========================================
+    # Свойства и методы для личного кабинета
+    # ========================================
+
+    @property
+    def nights(self):
+        """Количество ночей в брони."""
+        return (self.check_out - self.check_in).days
+
+    @property
+    def can_cancel(self):
+        """Можно ли отменить бронь (если до заезда > 3 дней и статус pending/confirmed)."""
+        if self.status not in ['pending', 'confirmed']:
+            return False
+        days_before = (self.check_in - date.today()).days
+        return days_before > 3
+
+    def get_status_color(self):
+        """Bootstrap-цвет для бейджа статуса."""
+        colors = {
+            'pending': 'warning',
+            'confirmed': 'success',
+            'canceled': 'danger',
+            'completed': 'secondary',
+        }
+        return colors.get(self.status, 'secondary')

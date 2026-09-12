@@ -70,8 +70,20 @@
     </div>
     {% endif %}
 
+
+    <!-- ==================== КНОПКА НАЗАД ==================== -->
+    {% if request.path != '/' %}
+    <div class="container mt-3">
+        <button onclick="history.back()" class="btn btn-outline-secondary btn-sm back-btn">
+            <i class="fas fa-arrow-left me-1"></i> Назад
+        </button>
+    </div>
+    {% endif %}
+
     <!-- ==================== ОСНОВНОЙ КОНТЕНТ ==================== -->
     {% block content %}{% endblock %}
+
+    
 
     <!-- ==================== ФУТЕР ==================== -->
     <footer class="footer py-4 mt-5">

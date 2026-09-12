@@ -63,6 +63,20 @@ class Room(models.Model):
             current += timedelta(days=1)
         return total
 
+    @property
+    def reviews_count(self):
+        """Количество одобренных отзывов."""
+        return self.reviews.filter(is_moderated=True).count()
+
+    @property
+    def average_rating(self):
+        """Средний рейтинг на основе одобренных отзывов. Возвращает None, если отзывов нет."""
+        reviews = self.reviews.filter(is_moderated=True)
+        if not reviews.exists():
+            return None
+        total = sum(r.rating for r in reviews)
+        return round(total / reviews.count(), 1)    
+
 
 class RoomImage(models.Model):
     """Фотографии номера."""
