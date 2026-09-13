@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Статистика – Мускат{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">📊 Статистика гостевого дома</h1>
+
+    <!-- KPI-карточки -->
+    <div class="row g-3 mb-5">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Всего броней</p>
+                    <h2 class="mb-0">{{ total_bookings }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Подтверждено</p>
+                    <h2 class="mb-0 text-success">{{ total_confirmed }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Выручка</p>
+                    <h2 class="mb-0">{{ total_revenue|floatformat:0 }} ₽</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Средний чек</p>
+                    <h2 class="mb-0">{{ avg_check|floatformat:0 }} ₽</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Загрузка на сегодня -->
+    <div class="alert alert-info mb-5">
+        <strong>Загрузка на сегодня:</strong> {{ occupancy }}% номеров занято.
+    </div>
+
+    <!-- Графики -->
+    <div class="row g-4 mb-5">
+        <!-- Выручка по месяцам -->
+        <div class="col-lg-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="mb-3">💰 Выручка по месяцам</h5>
+                    <canvas id="revenueChart" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Загрузка по месяцам -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="mb-3">📈 Брони по месяцам</h5>
+                    <canvas id="bookingsChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Статусы -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="mb-3">📊 Статусы броней</h5>
+                    <canvas id="statusChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Топ номеров -->
+        <div class="col-lg-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="mb-3">🏆 Топ-5 популярных номеров</h5>
+                    <canvas id="roomsChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ========================================
+    // Цвета сайта
+    // ========================================
+    const green = '#2E5D3A';
+    const blue = '#1A3B5C';
+    const terracotta = '#D4884A';
+    const sand = '#F0EBE3';
+
+    // ========================================
+    // 1. Выручка по месяцам (линейный график)
+    // ========================================
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: {{ months_labels|safe }},
+            datasets: [{
+                label: 'Выручка (₽)',
+                data: {{ months_revenue|safe }},
+                borderColor: green,
+                backgroundColor: 'rgba(46, 93, 58, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { callback: function(v) { return v.toLocaleString('ru-RU') + ' ₽'; } }
+                }
+            }
+        }
+    });
+
+    // ========================================
+    // 2. Брони по месяцам (столбчатый)
+    // ========================================
+    new Chart(document.getElementById('bookingsChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ months_labels|safe }},
+            datasets: [{
+                label: 'Брони',
+                data: {{ months_count|safe }},
+                backgroundColor: terracotta,
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // ========================================
+    // 3. Статусы броней (круговой)
+    // ========================================
+    new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {{ status_labels|safe }},
+            datasets: [{
+                data: {{ status_counts|safe }},
+                backgroundColor: ['#ffc107', '#198754', '#dc3545', '#6c757d'],
+                borderWidth: 2,
+                borderColor: '#fff',
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // ========================================
+    // 4. Топ номеров (горизонтальный бар)
+    // ========================================
+    new Chart(document.getElementById('roomsChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ rooms_labels|safe }},
+            datasets: [{
+                label: 'Количество броней',
+                data: {{ rooms_count|safe }},
+                backgroundColor: blue,
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true } }
+        }
+    });
+});
+</script>
+{% endblock %}

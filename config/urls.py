@@ -11,6 +11,7 @@ urlpatterns = [
     path('accounts/', include('apps.accounts.urls')),
     path('reviews/', include('apps.reviews.urls')),
     path('pages/', include('apps.pages.urls')),
+    path('analytics/', include('apps.analytics.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
