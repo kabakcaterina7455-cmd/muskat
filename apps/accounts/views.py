@@ -19,6 +19,8 @@ class RegisterView(View):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            # Указываем backend явно
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
             messages.success(request, "Регистрация прошла успешно!")
             return redirect('core:home')
@@ -26,18 +28,26 @@ class RegisterView(View):
 
 class LoginView(View):
     def get(self, request):
-        return render(request, 'accounts/login.html')
+        from django.contrib.auth.forms import AuthenticationForm
+        form = AuthenticationForm()
+        return render(request, 'accounts/login.html', {'form': form})
 
     def post(self, request):
         from django.contrib.auth import authenticate
-        email = request.POST.get('email')
+        # Поле ввода может называться username — там лежит email
+        email = request.POST.get('username') or request.POST.get('email')
         password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)
+
+        # ВАЖНО: authenticate принимает username=, а не email=
+        user = authenticate(request, username=email, password=password)
+
         if user is not None:
             login(request, user)
             return redirect('core:home')
+
         messages.error(request, "Неверный email или пароль.")
-        return render(request, 'accounts/login.html')
+        from django.contrib.auth.forms import AuthenticationForm
+        return render(request, 'accounts/login.html', {'form': AuthenticationForm()})
 
 class LogoutView(View):
     def get(self, request):

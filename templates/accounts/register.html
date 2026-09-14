@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 500px; margin: 60px auto;">
+    <h2 style="text-align: center;">Регистрация</h2>
+
+    <form method="post" style="margin-top: 30px;">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 15px;">
+            <label>Имя пользователя:</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <p style="color: red; font-size: 14px;">{{ form.username.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Email:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <p style="color: red; font-size: 14px;">{{ form.email.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Пароль:</label>
+            <div style="position: relative;">
+                <input type="password"
+                       name="password1"
+                       id="id_password1"
+                       class="form-control"
+                       style="width: 100%; padding-right: 40px;">
+                <span onclick="togglePassword('id_password1', this)"
+                      style="position: absolute; right: 10px; top: 50%;
+                             transform: translateY(-50%); cursor: pointer;
+                             font-size: 18px; user-select: none;">
+                    👁
+                </span>
+            </div>
+            {% if form.password1.errors %}
+                <p style="color: red; font-size: 14px;">{{ form.password1.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Повторите пароль:</label>
+            <div style="position: relative;">
+                <input type="password"
+                       name="password2"
+                       id="id_password2"
+                       class="form-control"
+                       style="width: 100%; padding-right: 40px;">
+                <span onclick="togglePassword('id_password2', this)"
+                      style="position: absolute; right: 10px; top: 50%;
+                             transform: translateY(-50%); cursor: pointer;
+                             font-size: 18px; user-select: none;">
+                    👁
+                </span>
+            </div>
+            {% if form.password2.errors %}
+                <p style="color: red; font-size: 14px;">{{ form.password2.errors }}</p>
+            {% endif %}
+        </div>
+
+        <button type="submit"
+                style="width: 100%; padding: 12px; background: #8B4513; color: white;
+                       border: none; border-radius: 5px; margin-top: 10px;">
+            Зарегистрироваться
+        </button>
+    </form>
+
+    <p style="text-align: center; margin-top: 20px;">
+        Уже есть аккаунт? <a href="{% url 'accounts:login' %}">Войти</a>
+    </p>
+</div>
+
+<script>
+function togglePassword(fieldId, icon) {
+    const field = document.getElementById(fieldId);
+
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.textContent = '🙈';
+    } else {
+        field.type = 'password';
+        icon.textContent = '👁';
+    }
+}
+</script>
+{% endblock %}
