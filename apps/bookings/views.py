@@ -5,6 +5,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.views import View
 from django.urls import reverse
+from django.http import JsonResponse
+from datetime import datetime
 
 from .models import Booking
 from apps.rooms.models import Room
@@ -99,3 +101,35 @@ class BookingCancelView(LoginRequiredMixin, View):
             messages.error(request, "Эту бронь нельзя отменить (до заезда меньше 3 дней).")
 
         return redirect('accounts:profile')
+
+
+# ========================================
+# AJAX-расчёт стоимости брони
+# ========================================
+def calculate_price(request, room_slug):
+    """AJAX-расчёт стоимости брони на выбранные даты."""
+    room = get_object_or_404(Room, slug=room_slug, is_active=True)
+
+    check_in = request.GET.get('check_in')
+    check_out = request.GET.get('check_out')
+
+    if not check_in or not check_out:
+        return JsonResponse({'error': 'Укажите даты'}, status=400)
+
+    try:
+        date_in = datetime.strptime(check_in, '%Y-%m-%d').date()
+        date_out = datetime.strptime(check_out, '%Y-%m-%d').date()
+    except ValueError:
+        return JsonResponse({'error': 'Неверный формат даты'}, status=400)
+
+    if date_in >= date_out:
+        return JsonResponse({'error': 'Дата выезда должна быть позже даты заезда'}, status=400)
+
+    nights = (date_out - date_in).days
+    total = room.get_current_price(date_in, date_out)
+
+    return JsonResponse({
+        'nights': nights,
+        'total': float(total),
+        'price_per_night': float(room.price_per_night),
+    })

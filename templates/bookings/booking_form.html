@@ -5,13 +5,31 @@
 
 {% block content %}
 <div class="container py-5">
-    <h2>Бронирование номера "{{ room.name }}"</h2>
+    <h2 class="mb-4">Бронирование номера «{{ room.name }}»</h2>
+
     <div class="row">
         <div class="col-md-6">
-            <form method="post">
+            <form method="post" id="booking-form">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn btn-warning">Отправить заявку</button>
+
+                <div id="price-summary" class="alert alert-light border mt-3" style="display: none;">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Ночей:</span>
+                        <strong id="nights-count">0</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Цена за сутки:</span>
+                        <strong id="price-per-night">0 ₽</strong>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex justify-content-between">
+                        <span class="fs-5">Итого:</span>
+                        <strong class="fs-5 text-success" id="total-price">0 ₽</strong>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100 mt-2">Отправить заявку</button>
             </form>
         </div>
         <div class="col-md-6">
@@ -26,4 +44,58 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const bookingForm = document.getElementById('booking-form');
+    if (!bookingForm) return;
+
+    const checkInInput = bookingForm.querySelector('input[name="check_in"]');
+    const checkOutInput = bookingForm.querySelector('input[name="check_out"]');
+    const summary = document.getElementById('price-summary');
+    const nightsEl = document.getElementById('nights-count');
+    const perNightEl = document.getElementById('price-per-night');
+    const totalEl = document.getElementById('total-price');
+
+    if (!checkInInput || !checkOutInput || !summary) return;
+
+    function calculateTotal() {
+        const checkIn = checkInInput.value;
+        const checkOut = checkOutInput.value;
+
+        if (!checkIn || !checkOut) {
+            summary.style.display = 'none';
+            return;
+        }
+
+        fetch(`/bookings/calculate/{{ room.slug }}/?check_in=${checkIn}&check_out=${checkOut}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    summary.style.display = 'none';
+                    return;
+                }
+
+                const formatPrice = (num) =>
+                    new Intl.NumberFormat('ru-RU').format(num) + ' ₽';
+
+                nightsEl.textContent = data.nights;
+                perNightEl.textContent = formatPrice(data.price_per_night);
+                totalEl.textContent = formatPrice(data.total);
+                summary.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Ошибка расчёта:', error);
+                summary.style.display = 'none';
+            });
+    }
+
+    checkInInput.addEventListener('change', calculateTotal);
+    checkInInput.addEventListener('input', calculateTotal);
+    checkOutInput.addEventListener('change', calculateTotal);
+    checkOutInput.addEventListener('input', calculateTotal);
+});
+</script>
 {% endblock %}

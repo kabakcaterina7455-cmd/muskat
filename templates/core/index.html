@@ -47,6 +47,64 @@
     </div>
 </section>
 
+<!-- ========== О НАС ========== -->
+<section class="container py-5">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+            <div class="about-image">
+                <img src="{% static 'images/hero/slide2.jpg' %}" alt="Гостевой дом Мускат">
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <h2 class="mb-4">О нашем гостевом доме</h2>
+            <p class="lead">
+                «Мускат» — это уютный гостевой дом в самом сердце Пицунды,
+                всего в 150 метрах от чистого песчаного пляжа.
+            </p>
+            <p>
+                Мы создали место, куда хочется возвращаться: тихая закрытая территория,
+                собственный подогреваемый бассейн, детская площадка и мангальная зона.
+                Здесь одинаково комфортно и семьям с детьми, и парам, и компаниям друзей.
+            </p>
+            <p>
+                Наши гости отмечают домашнюю атмосферу, чистоту и внимание к деталям.
+                Мы всегда на связи и готовы помочь сделать ваш отдых незабываемым.
+            </p>
+
+            <div class="row mt-4 g-3">
+                <div class="col-sm-6">
+                    <div class="about-feature">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Собственный бассейн
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="about-feature">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Закрытая территория
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="about-feature">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Детская площадка
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="about-feature">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Мангальная зона
+                    </div>
+                </div>
+            </div>
+
+            <a href="{% url 'pages:page' 'about' %}" class="btn btn-outline-primary mt-4">
+                Подробнее о нас →
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- ========== ПРЕИМУЩЕСТВА ========== -->
 <section class="container py-5">
     <div class="row text-center">

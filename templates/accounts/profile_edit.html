@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактирование профиля – Мускат{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4">Редактировать профиль</h1>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {% if profile.avatar %}
+                        <div class="mb-3">
+                            <label class="form-label">Текущий аватар:</label><br>
+                            <img src="{{ profile.avatar.url }}" alt="Аватар"
+                                 style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                        </div>
+                        {% endif %}
+
+                        {{ form.as_p }}
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Сохранить
+                        </button>
+                        <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary">
+                            Отмена
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

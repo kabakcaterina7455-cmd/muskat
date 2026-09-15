@@ -144,3 +144,5 @@ CACHES = {
         'LOCATION': 'muscat-cache',
     }
 }
+
+SILENCED_SYSTEM_CHECKS = ['ckeditor.W001']

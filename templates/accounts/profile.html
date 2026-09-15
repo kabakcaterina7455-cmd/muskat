@@ -1,30 +1,146 @@
 {% extends 'base.html' %}
 
-{% block title %}Мой профиль{% endblock %}
+{% block title %}Личный кабинет – Мускат{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-    <h2>Личный кабинет</h2>
-    <h4>Мои бронирования</h4>
+
+    <!-- Заголовок -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <h1>Личный кабинет</h1>
+        <div class="d-flex gap-2">
+            <a href="{% url 'accounts:profile_edit' %}" class="btn btn-outline-primary">
+                <i class="fas fa-user-edit me-1"></i> Редактировать
+            </a>
+            <a href="{% url 'rooms:list' %}" class="btn btn-warning">
+                <i class="fas fa-plus me-1"></i> Забронировать
+            </a>
+        </div>
+    </div>
+
+    <!-- Блок данных пользователя -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}" alt="Аватар"
+                         style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-right: 20px;">
+                {% else %}
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #2E5D3A;
+                                color: #fff; display: flex; align-items: center; justify-content: center;
+                                font-size: 32px; margin-right: 20px;">
+                        {{ user.email|first|upper }}
+                    </div>
+                {% endif %}
+                <div>
+                    <h5 class="mb-1">
+                        {% if user.first_name or user.last_name %}
+                            {{ user.first_name }} {{ user.last_name }}
+                        {% else %}
+                            {{ user.email }}
+                        {% endif %}
+                    </h5>
+                    <p class="mb-0 text-muted">{{ user.email }}</p>
+                    {% if user.phone %}
+                    <p class="mb-0 text-muted"><i class="fas fa-phone"></i> {{ user.phone }}</p>
+                    {% endif %}
+                </div>
+                <div class="ms-auto">
+                    <a href="{% url 'accounts:password_change' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-key me-1"></i> Сменить пароль
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Статистика -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <p class="text-muted mb-1 small">Всего броней</p>
+                    <h2 class="mb-0">{{ total_bookings }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <p class="text-muted mb-1 small">Ночей в доме</p>
+                    <h2 class="mb-0">{{ total_nights }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <p class="text-muted mb-1 small">Потрачено</p>
+                    <h2 class="mb-0">{{ total_spent|floatformat:0 }} ₽</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Брони -->
+    <h3 class="mb-3">Мои брони</h3>
+
     {% if bookings %}
-    <table class="table table-striped">
-        <thead>
-            <tr><th>Номер</th><th>Заезд</th><th>Выезд</th><th>Статус</th><th>Сумма</th></tr>
-        </thead>
-        <tbody>
-            {% for booking in bookings %}
-            <tr>
-                <td>{{ booking.room.name }}</td>
-                <td>{{ booking.check_in }}</td>
-                <td>{{ booking.check_out }}</td>
-                <td>{{ booking.get_status_display }}</td>
-                <td>{{ booking.total_price }} ₽</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        {% for booking in bookings %}
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5 class="mb-2">
+                            {{ booking.room.name }}
+                            <span class="badge bg-{{ booking.get_status_color }} ms-2">
+                                {{ booking.get_status_display }}
+                            </span>
+                        </h5>
+                        <p class="mb-1">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            {{ booking.check_in|date:"d.m.Y" }} → {{ booking.check_out|date:"d.m.Y" }}
+                            <span class="text-muted">({{ booking.nights }} ноч.)</span>
+                        </p>
+                        <p class="mb-1">
+                            <i class="fas fa-users me-1"></i>
+                            Взрослых: {{ booking.adults }}, детей: {{ booking.children }}
+                        </p>
+                        <p class="mb-0">
+                            <i class="fas fa-phone me-1"></i>
+                            {{ booking.guest_phone }} · {{ booking.guest_email }}
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <p class="fs-4 fw-bold mb-2">{{ booking.total_price }} ₽</p>
+
+                        {% if booking.can_cancel %}
+                        <form method="post" action="{% url 'bookings:cancel' booking.id %}"
+                              onsubmit="return confirm('Точно отменить бронь?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-times me-1"></i> Отменить
+                            </button>
+                        </form>
+                        {% else %}
+                            {% if booking.status == 'canceled' %}
+                            <span class="text-muted small">Отменено</span>
+                            {% elif booking.status == 'completed' %}
+                            <span class="text-muted small">Завершено</span>
+                            {% elif booking.status == 'pending' or booking.status == 'confirmed' %}
+                            <span class="text-muted small">Отмена недоступна<br>(меньше 3 дней до заезда)</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     {% else %}
-    <p>У вас пока нет бронирований.</p>
+        <div class="alert alert-info">
+            У вас пока нет броней.
+            <a href="{% url 'rooms:list' %}">Выбрать номер →</a>
+        </div>
     {% endif %}
 </div>
 {% endblock %}
