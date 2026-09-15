@@ -30,24 +30,35 @@ class RegisterView(View):
 
 
 class LoginView(View):
-    """Вход."""
+    """Вход в личный кабинет."""
+
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('core:home')
         return render(request, 'accounts/login.html')
 
     def post(self, request):
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
+
+        user = authenticate(request, username=email, password=password)
+
         if user is not None:
             login(request, user)
+            messages.success(request, f"С возвращением, {user.email}!")
             return redirect('core:home')
-        messages.error(request, "Неверный email или пароль.")
-        return render(request, 'accounts/login.html')
 
+        messages.error(request, "Неверный email или пароль.")
+        return render(request, 'accounts/login.html', {'email': email})
 
 class LogoutView(View):
-    """Выход."""
+    """Выход из аккаунта."""
+
     def get(self, request):
+        logout(request)
+        return redirect('core:home')
+
+    def post(self, request):
         logout(request)
         return redirect('core:home')
 
